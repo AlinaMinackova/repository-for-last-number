@@ -5,11 +5,14 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem
 
+import UI
+import addEditCoffeeForm
 
-class MyWidget(QMainWindow):
+
+class MyWidget(QMainWindow, UI.Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi("UI.ui", self)
+        self.setupUi(self)
         self.con = sqlite3.connect("coffee.db")
         self.pushButton.clicked.connect(self.update_result)
         self.pushButton_3.clicked.connect(self.add)
@@ -36,13 +39,13 @@ class MyWidget(QMainWindow):
         self.window_2.show()
 
 
-class Window(QMainWindow):
+class Window(QMainWindow, addEditCoffeeForm.Ui_MainWindow):
     def __init__(self, parent=None):
+        super(Window, self).__init__(parent)
+        self.setupUi(self)
         self.modified = {}
         self.row = 0
         self.con = sqlite3.connect("coffee.db")
-        super(Window, self).__init__(parent)
-        uic.loadUi('addEditCoffeeForm.ui', self)
         self.Pyui()
 
     def Pyui(self):
