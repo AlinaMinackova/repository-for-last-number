@@ -26,7 +26,6 @@ class MyWidget(QMainWindow):
         self.tableWidget.setRowCount(len(result))
         self.tableWidget.setColumnCount(len(result[0]))
         self.titles = [description[0] for description in cur.description]
-        print(self.titles)
         # Заполнили таблицу полученными элементами
         self.tableWidget.setHorizontalHeaderLabels(self.titles)
         for i, elem in enumerate(result):
@@ -54,10 +53,32 @@ class MyWidget(QMainWindow):
             self.row = 0
 
     def add(self):
-        list = ['gh', '2', '3', '4', '5', '6']
-        cur = self.con.cursor()
-        cur.execute("""INSERT INTO coffee('title', 'roasting', 'type', 'taste', 'price', 'volume') VALUES(?, ?, ?, ?, ?, ?)""", ('1', '2', '3', '4', '5', '6')).fetchall()
-        self.con.commit()
+        self.window_2 = Window()
+        self.window_2.show()
+
+
+class Window(QMainWindow):
+    def __init__(self, parent=None):
+        super(Window, self).__init__(parent)
+        uic.loadUi('UI_2.ui', self)
+        self.pushButton.clicked.connect(self.save_2)
+
+    def save_2(self):
+        self.label_7.setText('')
+        if not self.lineEdit_5.text().isdigit() or not self.lineEdit_6.text().isdigit():
+            self.label_7.setText('Не все поля корректно заполнены')
+        elif self.lineEdit.text() != '' and self.lineEdit_2.text() != '' and self.lineEdit_3.text() != '' \
+                and self.lineEdit_4.text() != '' and self.lineEdit_5.text() != '' and self.lineEdit_6.text() != '':
+            con = sqlite3.connect('coffee.db')
+            cur = con.cursor()
+            cur.execute("""INSERT INTO coffee('title', 'roasting', 'type', 'taste', 'price', 'volume') 
+            VALUES(?, ?, ?, ?, ?, ?)""",
+                        (self.lineEdit.text(), self.lineEdit_2.text(), self.lineEdit_3.text(),
+                         self.lineEdit_4.text(), self.lineEdit_5.text(), self.lineEdit_6.text())).fetchall()
+            con.commit()
+            self.destroy()
+        else:
+            self.label_7.setText('Не все поля заполнены')
 
 
 if __name__ == '__main__':
